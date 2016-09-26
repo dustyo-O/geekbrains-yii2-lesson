@@ -1,17 +1,21 @@
 <?php
 namespace backend\controllers;
 
+use backend\models\AneksPublish;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\models\Aneks;
+use yii\web\UploadedFile;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    public $layout = 'cube.php';
     /**
      * @inheritdoc
      */
@@ -26,10 +30,10 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'index', 'create-anek'],
                         'allow' => true,
                         'roles' => ['@'],
-                    ],
+                    ]
                 ],
             ],
             'verbs' => [
@@ -94,5 +98,38 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionCreateAnek()
+    {
+        $anek_form = new AneksPublish();
+
+        $post = Yii::$app->request->post("AneksPublish");
+        if (count($post))
+        {
+            $picture = UploadedFile::getInstance($anek_form,'image');
+            $image = null;
+
+            if ($picture)
+            {
+                $image = AneksPublish::uploadImage($picture);
+            }
+
+
+
+            $anek_form->text = $post['text'];
+            $anek_form->image = $image;
+            $anek_form->category_id = $post['category_id'];
+
+            if ($anek_form->createAnek())
+            {
+                return $this->refresh();
+            }
+        }
+
+
+        return $this->render("create-anek",[
+            'anek_form' => $anek_form
+        ]);
     }
 }
