@@ -7,6 +7,7 @@
  */
 namespace frontend\controllers;
 
+use common\models\AnekPicture;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -180,7 +181,7 @@ class UserController extends Controller
 
             if ($picture)
             {
-                $image = AneksPublish::uploadImage($picture);
+                $image = AnekPicture::uploadImage($picture);
             }
 
             $anek_form->text = $post['text'];

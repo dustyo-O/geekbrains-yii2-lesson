@@ -25,7 +25,7 @@ class FilterForm extends Model
     public function rules()
     {
         return [
-            [['user', 'mode'], 'integer']
+            [['user'], 'integer'],
         ];
     }
 

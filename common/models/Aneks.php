@@ -47,6 +47,12 @@ class Aneks extends \yii\db\ActiveRecord
             'title' => 'Программистские'
         ]
     ];
+
+    public static $modes = [
+        self::MODE_BOTH => "И текст и картинка",
+        self::MODE_IMAGE => "Картинка",
+        self::MODE_TEXT => "Текст",
+    ];
     /**
      * @inheritdoc
      */
@@ -147,16 +153,65 @@ class Aneks extends \yii\db\ActiveRecord
      */
     public static function getFeedQuery($page = 1, $filter = null)
     {
-        $aneks_query = static::find()->leftJoin(User::tableName(), self::tableName().'.user_id = '.User::tableName().'.id')->with('user');
+        $aneks_query = static::find()->leftJoin(User::tableName(), static::tableName().'.user_id = '.User::tableName().'.id')->with('user');
         if ($filter)
         {
+
+            if ($filter->mode)
+            {
+                $or = false;
+                if (in_array(Aneks::MODE_BOTH, $filter->mode))
+                {
+                    $aneks_query->where(['!=','text', ''])->andWhere(['!=', 'image', '']);
+                    $or = true;
+                }
+                if (in_array(Aneks::MODE_TEXT, $filter->mode))
+                {
+                    if ($or)
+                    {
+                        $aneks_query->orWhere(['!=','text', '']);
+                    }
+                    else
+                    {
+                        $aneks_query->where(['!=','text', '']);
+                    }
+                    $or = true;
+                }
+                if (in_array(Aneks::MODE_IMAGE, $filter->mode))
+                {
+                    var_dump('image');
+                    if ($or)
+                    {
+                        $aneks_query->orWhere(['!=','image', '']);
+                    }
+                    else
+                    {
+                        $aneks_query->where(['!=','image', '']);
+                    }
+                    $or = true;
+                }
+
+            }
             if ($filter->user)
             {
-                $aneks_query->where([User::tableName().'.id' => $filter->user]);
+                $aneks_query->andWhere([User::tableName().'.id' => $filter->user]);
             }
         }
 
         return $aneks_query;
+    }
+
+    public function getImage()
+    {
+        $image = AnekPicture::readPicture($this->image);
+        if ($image)
+        {
+            return 'data:image/jpg;base64,'.base64_encode($image);
+        }
+        else
+        {
+            return null;
+        }
     }
 
 

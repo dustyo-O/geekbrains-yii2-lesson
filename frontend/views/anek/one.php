@@ -8,50 +8,29 @@
 
 use common\models\Aneks;
 use yii\helpers\Url;
-use yii\widgets\ActiveForm;
-use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $aneks \common\models\Aneks[] */
-/* @var $filter \frontend\models\FilterForm */
-/* @var $users array */
+/* @var $anek \common\models\Aneks */
 
 
 
-$this->title = "Анекдоты";
+$this->title = "Анекдот #".$anek->id;
 
 
-?>
-<?php
-$form = ActiveForm::begin([
-    'id' => 'filter-form',
-    'options' => ['class' => 'form-horizontal'],
-]);
-
-
-?>
-<?= $form->field($filter, 'user')->dropDownList($users,['prompt' => 'Все пользователи']) ?>
-<?= $form->field($filter, 'mode')->checkboxList(Aneks::$modes) ?>
-<?= Html::submitButton('Искать', ['class' => 'btn btn-primary']) ?>
-<?php
-ActiveForm::end();
 ?>
 
 
 <div class="row">
-        <?php
-        foreach ($aneks as $a)
-        {
-        ?>
+
     <div class="col-sm-6">
             <?php
-            $anek_content = $a->getContent();
+            $anek_content = $anek->getContent();
 
             $image_html = '';
             $text_html = '';
             if (($anek_content->mode === Aneks::MODE_BOTH)||($anek_content->mode === Aneks::MODE_IMAGE))
             {
-                $image_src = $a->getImage();
+                $image_src = $anek->getImage();
                 $image_html = <<<HTML
     <img src="{$image_src}" class="img-responsive"/>"
 HTML;
@@ -69,15 +48,15 @@ HTML;
                 <?= $image_html ?>
                 <div class="panel-body">
                     <div class="blog-post-meta">
-                        <span class="label label-light label-primary"><?= $a->getCategory() ?></span>
+                        <span class="label label-light label-primary"><?= $anek->getCategory() ?></span>
                         <p class="blog-post-date pull-right">February 16, 2016</p>
                     </div>
                     <div class="blog-post-content">
                         <a href="post-image.html">
-                            <h2 class="blog-post-title pull-right"><?= $a->user->username ?></h2>
+                            <h2 class="blog-post-title pull-right"><?= $anek->user->username ?></h2>
                         </a>
                         <?= $text_html ?>
-                        <a class="btn btn-info" href="<?= Url::to(['anek/view', 'id' => $a->id]) ?>">Читать</a>
+                        <a class="btn btn-info" href="<?= Url::to(['anek/view', 'id' => $anek->id]) ?>">Читать</a>
                         <a class="blog-post-share pull-right" href="#">
                             <i class="material-icons">&#xE80D;</i>
                         </a>
@@ -87,8 +66,6 @@ HTML;
         </section><!-- /.blog-post -->
 
     </div>
-        <?php
-        }
-        ?>
+
 
 </div>
