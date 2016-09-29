@@ -1,7 +1,7 @@
 <?php
 namespace backend\controllers;
 
-use backend\models\AneksPublish;
+use common\models\AneksPublish;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;

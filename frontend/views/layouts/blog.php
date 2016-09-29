@@ -4,6 +4,7 @@
 
 use frontend\assets\BlogAsset;
 use yii\helpers\Html;
+use common\models\Aneks;
 
 
 BlogAsset::register($this);
@@ -37,56 +38,59 @@ BlogAsset::register($this);
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.html"><i class="material-icons">&#xE871;</i> Material Blog</a>
+            <a class="navbar-brand" href="/"><i class="material-icons">&#xE871;</i> Анекдоты</a>
         </div>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
             <ul class="nav navbar-nav">
                 <li class="active dropdown">
-                    <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Stories <b class="caret"></b></a>
+                    <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Категории <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="home-fashion.html">Fashion</a></li>
-                        <li><a href="home-food.html">Food</a></li>
-                        <li><a href="home-music.html">Music</a></li>
-                        <li><a href="home-photography.html">Photography</a></li>
-                        <li><a href="home-technology.html">Technology</a></li>
-                        <li><a href="home-travel.html">Travel</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Filters <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="filter-category.html">Category</a></li>
-                        <li><a href="filter-author.html">Author</a></li>
-                        <li><a href="filter-date.html">Date</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Post <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="post-image.html">Image post</a></li>
-                        <li><a href="post-video.html">Video post</a></li>
-                    </ul>
-                </li>
-                <li><a href="page-about.html">About</a></li>
-                <li><a href="page-contact.html">Contact</a></li>
-                <li class="dropdown hidden-sm">
-                    <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Documentation <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="doc-buttons.html">Buttons</a></li>
-                        <li><a href="doc-forms.html">Forms</a></li>
-                        <li><a href="doc-icons.html">Icons</a></li>
-                        <li><a href="doc-indicators.html">Indicators</a></li>
-                        <li><a href="doc-navbars.html">Navbars</a></li>
-                        <li><a href="doc-panels.html">Panels</a></li>
-                        <li><a href="doc-tables.html">Tables</a></li>
-                        <li><a href="doc-typography.html">Typography</a></li>
+                        <?php
+                        foreach (Aneks::$categories as $cat)
+                        {
+                            $title = $cat['title'];
+                            $cat_id = $cat['id'];
+                            ?>
+                            <li><a href="<?= \yii\helpers\Url::to(['anek/feed', 'cat' => $cat_id]) ?>"><?= $title ?></a></li>
+                        <?php
+                        }
+                        ?>
+
+
                     </ul>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                <?php
+                if (Yii::$app->user->isGuest)
+                {
+                    ?>
+                    <li class="active dropdown">
+                        <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Привет, Гость! <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            <li><a href="<?= \yii\helpers\Url::to(['user/signup']) ?>">Регистрация</a></li>
+                            <li><a href="<?= \yii\helpers\Url::to(['user/login']) ?>">Войти на сайт</a></li>
+
+                        </ul>
+                    </li>
+                <?php
+                }
+                else
+                {
+                    ?>
+                    <li class="active dropdown">
+                        <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Привет, <?= Yii::$app->user->identity->username ?> <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            <li><a href="<?= \yii\helpers\Url::to(['user/post-anek']) ?>">Отправить анекдот</a></li>
+
+                        </ul>
+                    </li>
+                <?php
+
+                }
+                ?>
             </ul>
         </div>
     </div>
@@ -130,10 +134,7 @@ BlogAsset::register($this);
 
                 <div class="col-sm-8 text-center offset">
                     <ul class="list-inline">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="page-about.html">About</a></li>
-                        <li><a href="doc-buttons.html">Documentation</a></li>
-                        <li><a href="page-contact.html">Contact</a></li>
+                        <li><a href="/">Домой</a></li>
                     </ul>
                 </div>
 

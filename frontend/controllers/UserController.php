@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: dusty
+ * Date: 29.09.16
+ * Time: 16:30
+ */
 namespace frontend\controllers;
 
 use Yii;
@@ -7,18 +13,21 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use frontend\models\ContactForm;
+use common\models\LoginForm;
+use frontend\models\PasswordResetRequestForm;
+use frontend\models\ResetPasswordForm;
+use frontend\models\SignupForm;
+use common\models\AneksPublish;
+use yii\web\UploadedFile;
 
 
 /**
- * Site controller
+ * User controller
  */
-class SiteController extends Controller
+class UserController extends Controller
 {
     public $layout = 'blog.php';
-    /**
-     * @inheritdoc
-     */
+
     public function behaviors()
     {
         return [
@@ -27,12 +36,12 @@ class SiteController extends Controller
                 'only' => ['logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['signup','login'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'create-anek'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -47,50 +56,20 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
-
-    /**
-     * Displays homepage.
-     *
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $title = 'Привет, мир!';
-        return $this->render('index', [
-            'caption' => $title
-        ]);
-    }
-
-    /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
+        if (!Yii::$app->user->isGuest)
+        {
             return $this->goHome();
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        if ($model->load(Yii::$app->request->post()) && $model->login())
+        {
             return $this->goBack();
-        } else {
+        }
+        else
+        {
             return $this->render('login', [
                 'model' => $model,
             ]);
@@ -110,39 +89,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending email.');
-            }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-
-    /**
      * Signs user up.
      *
      * @return mixed
@@ -150,9 +96,12 @@ class SiteController extends Controller
     public function actionSignup()
     {
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if ($user = $model->signup())
+            {
+                if (Yii::$app->getUser()->login($user))
+                {
                     return $this->goHome();
                 }
             }
@@ -171,12 +120,16 @@ class SiteController extends Controller
     public function actionRequestPasswordReset()
     {
         $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if ($model->sendEmail())
+            {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
 
                 return $this->goHome();
-            } else {
+            }
+            else
+            {
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for email provided.');
             }
         }
@@ -195,13 +148,16 @@ class SiteController extends Controller
      */
     public function actionResetPassword($token)
     {
-        try {
+        try
+        {
             $model = new ResetPasswordForm($token);
-        } catch (InvalidParamException $e) {
+        } catch (InvalidParamException $e)
+        {
             throw new BadRequestHttpException($e->getMessage());
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword())
+        {
             Yii::$app->session->setFlash('success', 'New password was saved.');
 
             return $this->goHome();
@@ -209,6 +165,36 @@ class SiteController extends Controller
 
         return $this->render('resetPassword', [
             'model' => $model,
+        ]);
+    }
+
+    public function actionPostAnek()
+    {
+        $anek_form = new AneksPublish();
+
+        $post = Yii::$app->request->post("AneksPublish");
+        if (count($post))
+        {
+            $picture = UploadedFile::getInstance($anek_form,'image');
+            $image = null;
+
+            if ($picture)
+            {
+                $image = AneksPublish::uploadImage($picture);
+            }
+
+            $anek_form->text = $post['text'];
+            $anek_form->image = $image;
+            $anek_form->category_id = $post['category_id'];
+
+            if ($anek_form->createAnek())
+            {
+                return $this->goHome();
+            }
+        }
+
+        return $this->render("create-anek",[
+            'anek_form' => $anek_form
         ]);
     }
 }

@@ -23,6 +23,7 @@ class Aneks extends \yii\db\ActiveRecord
 
     const NO_CATEGORY = 'Без категории';
 
+    const MODE_UNKNOWN = 0;
     const MODE_BOTH = 10;
     const MODE_IMAGE = 20;
     const MODE_TEXT = 30;
@@ -114,7 +115,10 @@ class Aneks extends \yii\db\ActiveRecord
 
     public function getContent()
     {
+
         $result = new \stdClass();
+
+        $result->mode = self::MODE_UNKNOWN;
 
         if ($this->image)
         {
@@ -134,5 +138,26 @@ class Aneks extends \yii\db\ActiveRecord
 
         return $result;
     }
+
+
+    /**
+     * @param int $page
+     * @param $filter \frontend\models\FilterForm
+     * @return \yii\db\ActiveQuery
+     */
+    public static function getFeedQuery($page = 1, $filter = null)
+    {
+        $aneks_query = static::find()->leftJoin(User::tableName(), self::tableName().'.user_id = '.User::tableName().'.id')->with('user');
+        if ($filter)
+        {
+            if ($filter->user)
+            {
+                $aneks_query->where([User::tableName().'.id' => $filter->user]);
+            }
+        }
+
+        return $aneks_query;
+    }
+
 
 }

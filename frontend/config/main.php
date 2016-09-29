@@ -45,5 +45,6 @@ return [
         ],
         */
     ],
+    'defaultRoute' => 'anek/feed',
     'params' => $params,
 ];

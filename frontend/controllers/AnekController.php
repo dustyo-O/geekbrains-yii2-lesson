@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use common\models\Aneks;
+use frontend\models\FilterForm;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -45,16 +46,28 @@ class AnekController extends Controller
         ]);
     }
 
-    public function actionHello()
+    public function actionFeed($cat = null)
     {
 
-        $aneks = Aneks::find()->all();
+
+        $filter = new FilterForm();
+
+        $post = Yii::$app->request->post("FilterForm");
+
+        if (count($post))
+        {
+            $filter->load($post);
+        }
+
+        $aneks = Aneks::getFeedQuery(1, $filter)->all();
 
         return $this->render('feed', [
-            'aneks' => $aneks
+            'aneks' => $aneks,
+            'filter' => $filter
         ]);
-
     }
+
+
 
 
 }
