@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "914f9194a4d021de88b285b03e683984",
-    "content-hash": "e1929a97e872bdbaacc8530468eccb67",
+    "hash": "9bc4437e7dd510e2b01a66bc541d5ccb",
+    "content-hash": "110f30dafcb6e6da20dd93400d0c6fda",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -85,6 +85,36 @@
                 "javascript",
                 "jquery",
                 "library"
+            ]
+        },
+        {
+            "name": "bower-asset/jquery-zoom",
+            "version": "1.7.18",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jackmoore/zoom.git",
+                "reference": "6dadbb7d9ffd82b58dc5b2060f3c0a9b028e0a3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jackmoore/zoom/zipball/6dadbb7d9ffd82b58dc5b2060f3c0a9b028e0a3a",
+                "reference": "6dadbb7d9ffd82b58dc5b2060f3c0a9b028e0a3a",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.7"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": "jquery.zoom.js"
+            },
+            "description": "Enlarge images on click or mouseover.",
+            "keywords": [
+                "images",
+                "jQuery",
+                "jquery-plugin",
+                "ui",
+                "zoom"
             ]
         },
         {

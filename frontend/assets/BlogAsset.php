@@ -21,7 +21,6 @@ class BlogAsset extends AssetBundle
         'https://fonts.googleapis.com/icon?family=Material+Icons'
     ];
     public $js = [
-        'js/pace.min.js',
         'js/ripples.min.js',
         'js/material.min.js',
         'js/material-scrolltop.js',

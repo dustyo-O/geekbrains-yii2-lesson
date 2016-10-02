@@ -66,11 +66,11 @@ BlogAsset::register($this);
                 {
                     ?>
                     <li class="active dropdown">
-                        <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Привет, Гость! <b class="caret"></b></a>
+                        <a href="#" data-target="#" class="user-menu dropdown-toggle" data-toggle="dropdown">Привет, Гость! <b class="caret"></b></a>
                         <ul class="dropdown-menu">
 
                             <li><a href="<?= \yii\helpers\Url::to(['user/signup']) ?>">Регистрация</a></li>
-                            <li><a href="<?= \yii\helpers\Url::to(['user/login']) ?>">Войти на сайт</a></li>
+                            <li><a class="signin" href="<?= \yii\helpers\Url::to(['user/login']) ?>">Войти на сайт</a></li>
 
                         </ul>
                     </li>
