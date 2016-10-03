@@ -26,6 +26,7 @@ class FilterForm extends Model
     {
         return [
             [['user'], 'integer'],
+            [['mode'], 'safe']
         ];
     }
 

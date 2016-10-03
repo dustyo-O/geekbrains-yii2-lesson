@@ -57,17 +57,8 @@ class AnekController extends Controller
         if (count($post))
         {
             $filter->load($post);
-
-            //var_dump($post);
-            $filter->mode = $post["FilterForm"]["mode"];
-
-            //var_dump($filter->mode);
-
         }
-
-
-        //var_dump($filter);
-
+        
         $aneks = Aneks::getFeedQuery(1, $filter)->all();
 
         /* @var $aneks Aneks[] */

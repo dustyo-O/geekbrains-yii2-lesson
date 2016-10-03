@@ -66,6 +66,18 @@ $this->title = "Анекдоты";
 ZoomAsset::register($this);
 
 ?>
+<?php
+$form = ActiveForm::begin([
+    'id' => 'filter-form',
+    'options' => ['class' => 'form-horizontal'],
+]);
+?>
+<?= $form->field($filter, 'user')->dropDownList($users,['prompt' => 'Все пользователи']) ?>
+<?= $form->field($filter, 'mode')->checkboxList(Aneks::$modes) ?>
+<?= Html::submitButton('Искать', ['class' => 'btn btn-primary']) ?>
+<?php
+ActiveForm::end();
+?>
 
 
 <div class="row">

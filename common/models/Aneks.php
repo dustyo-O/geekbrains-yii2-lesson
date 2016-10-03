@@ -154,48 +154,54 @@ class Aneks extends \yii\db\ActiveRecord
     public static function getFeedQuery($page = 1, $filter = null)
     {
         $aneks_query = static::find()->leftJoin(User::tableName(), static::tableName().'.user_id = '.User::tableName().'.id')->with('user');
+
+        //var_dump($filter);
+
         if ($filter)
         {
 
+            $aneks_query->filterWhere([
+                    'user_id' => $filter->user
+                ]
+            );
+
+            $mode_filter = [];
+
             if ($filter->mode)
             {
-                $or = false;
-                if (in_array(Aneks::MODE_BOTH, $filter->mode))
+                if (in_array(Aneks::MODE_IMAGE, $filter->mode))
                 {
-                    $aneks_query->where(['!=','text', ''])->andWhere(['!=', 'image', '']);
-                    $or = true;
+                    $mode_filter[] = ['and',
+                        ['text' => ''],
+                        ['NOT', ['image' => NULL]]
+                    ];
+
                 }
                 if (in_array(Aneks::MODE_TEXT, $filter->mode))
                 {
-                    if ($or)
-                    {
-                        $aneks_query->orWhere(['!=','text', '']);
-                    }
-                    else
-                    {
-                        $aneks_query->where(['!=','text', '']);
-                    }
-                    $or = true;
+                    $mode_filter[] = ['and',
+                        ['!=', 'text', ''],
+                        ['image' => NULL]
+                    ];
                 }
-                if (in_array(Aneks::MODE_IMAGE, $filter->mode))
+                if (in_array(Aneks::MODE_BOTH, $filter->mode))
                 {
-                    var_dump('image');
-                    if ($or)
-                    {
-                        $aneks_query->orWhere(['!=','image', '']);
-                    }
-                    else
-                    {
-                        $aneks_query->where(['!=','image', '']);
-                    }
-                    $or = true;
+                    $mode_filter[] = ['and',
+                        ['!=', 'text', ''],
+                        ['NOT', ['image' => NULL]]
+                    ];
                 }
 
             }
-            if ($filter->user)
+
+
+            if (count($mode_filter))
             {
-                $aneks_query->andWhere([User::tableName().'.id' => $filter->user]);
+                array_unshift($mode_filter,'or');
             }
+
+            $aneks_query->andWhere($mode_filter);
+
         }
 
         return $aneks_query;

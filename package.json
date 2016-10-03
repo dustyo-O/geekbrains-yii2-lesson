@@ -1,0 +1,25 @@
+{
+  "name": "yii2",
+  "version": "1.0.0",
+  "description": "Yii 2 Advanced Project Template ===============================",
+  "main": ".hermione.conf.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dustyo-O/geekbrains-yii2-lesson.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dustyo-O/geekbrains-yii2-lesson/issues"
+  },
+  "homepage": "https://github.com/dustyo-O/geekbrains-yii2-lesson#readme",
+  "dependencies": {
+    "hermione": "^0.13.0"
+  }
+}
