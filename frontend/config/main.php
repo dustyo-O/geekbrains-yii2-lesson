@@ -36,14 +36,26 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'news' => 'news/news/index',
+                'news/<action:delete|update|view>/<id:\d+>' => 'news/news/<action>',
+                'news/create' => 'news/news/create',
+                'anek' => 'anek/view',
+                'post' => 'user/post-anek',
+                'feed/<cat:\d+>.html' => 'anek/feed',
+                '<qqq:\w+>' => 'anek/<qqq>',
+
+
             ],
+        ]
+    ],
+    'modules' => [
+        'news' => [
+            'class' => 'app\modules\news\NewsModule',
         ],
-        */
     ],
     'defaultRoute' => 'anek/feed',
     'params' => $params,

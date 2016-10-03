@@ -18,6 +18,7 @@ class FilterForm extends Model
 {
     public $user;
     public $mode;
+    public $category_id;
 
     /**
      * @inheritdoc
@@ -25,7 +26,7 @@ class FilterForm extends Model
     public function rules()
     {
         return [
-            [['user'], 'integer'],
+            [['user', 'category_id'], 'integer'],
             [['mode'], 'safe']
         ];
     }

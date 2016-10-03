@@ -161,7 +161,8 @@ class Aneks extends \yii\db\ActiveRecord
         {
 
             $aneks_query->filterWhere([
-                    'user_id' => $filter->user
+                    'user_id' => $filter->user,
+                    'category_id' => $filter->category_id
                 ]
             );
 

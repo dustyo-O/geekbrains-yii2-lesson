@@ -58,6 +58,11 @@ class AnekController extends Controller
         {
             $filter->load($post);
         }
+
+        if ($cat)
+        {
+            $filter->category_id = $cat;
+        }
         
         $aneks = Aneks::getFeedQuery(1, $filter)->all();
 

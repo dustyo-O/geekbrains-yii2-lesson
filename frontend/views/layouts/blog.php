@@ -5,7 +5,7 @@
 use frontend\assets\BlogAsset;
 use yii\helpers\Html;
 use common\models\Aneks;
-
+use yii\helpers\Url;
 
 BlogAsset::register($this);
 
@@ -58,6 +58,9 @@ BlogAsset::register($this);
 
 
                     </ul>
+                </li>
+                <li class="active dropdown">
+                    <a href="<?= Url::to(['news']) ?>">Новости</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
