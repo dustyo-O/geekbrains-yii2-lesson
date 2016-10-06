@@ -54,4 +54,18 @@ class AnekPicture extends Model
             return null;
         }
     }
+
+    public static function getImageHtml($image)
+    {
+        if ((!$image)||(!file_exists(self::getImageDir().$image)))
+        {
+            $src = 'data:image/png;base64,'.base64_encode(file_get_contents(self::getImageDir().'no-image.png'));
+        }
+        else
+        {
+            $src = 'data:image/png;base64,'.base64_encode(self::readPicture($image));
+        }
+
+        return "<img class=\"anek-picture\" src=\"$src\"/>";
+    }
 }

@@ -7,7 +7,7 @@ namespace app\modules\news;
  */
 class NewsModule extends \yii\base\Module
 {
-    public $layout = '@app/views/layouts/blog.php';
+    public $layout = '@app/views/layouts/cube.php';
     /**
      * @inheritdoc
      */

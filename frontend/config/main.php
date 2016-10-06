@@ -52,11 +52,6 @@ return [
             ],
         ]
     ],
-    'modules' => [
-        'news' => [
-            'class' => 'app\modules\news\NewsModule',
-        ],
-    ],
     'defaultRoute' => 'anek/feed',
     'params' => $params,
 ];

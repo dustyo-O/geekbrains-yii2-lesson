@@ -11,7 +11,6 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
@@ -37,14 +36,20 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
+        ]
+    ],
+    'modules' => [
+        'news' => [
+            'class' => 'app\modules\news\NewsModule',
         ],
-        */
+        'aneks' => [
+            'class' => 'app\modules\aneks\AneksModule',
+        ]
     ],
     'params' => $params,
 ];

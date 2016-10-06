@@ -67,10 +67,9 @@ class Aneks extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id'], 'required'],
+            [['user_id'], 'default', 'value' => Yii::$app->user->id],
             [['user_id', 'category_id'], 'integer'],
             [['text'], 'string'],
-            [['image'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -82,9 +81,10 @@ class Aneks extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
-            'text' => 'Text',
-            'image' => 'Image',
+            'user_id' => 'Пользователь',
+            'category_id' => 'Категория',
+            'text' => 'Текст анекдота',
+            'image' => 'Картинка',
         ];
     }
 
@@ -220,6 +220,14 @@ class Aneks extends \yii\db\ActiveRecord
             return null;
         }
     }
+
+    /*public function beforeSave($insert)
+    {
+        if ($insert)
+        {
+            $this->user_id = Yii::$app->user->id;
+        }
+    }*/
 
 
 }
