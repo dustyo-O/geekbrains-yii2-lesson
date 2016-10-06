@@ -38,8 +38,9 @@ class AneksController extends Controller
     public function actionIndex()
     {
         $searchModel = new AneksSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        //var_dump($searchModel->toArray());die();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -115,7 +116,6 @@ class AneksController extends Controller
         {
             $image = AnekPicture::uploadImage($picture);
         }
-
 
         if ($model->load(Yii::$app->request->post())) {
             if ($image) $model->image = $image;

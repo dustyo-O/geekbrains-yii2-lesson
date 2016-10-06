@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use common\models\AnekPicture;
+use common\models\Aneks;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Aneks */
@@ -34,7 +35,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'user_id',
                 'value' => $model->user->username
             ],
-            'category_id',
+            'category_id' => [
+                'attribute' => 'category_id',
+                'value' => $model->category_id ? Aneks::$categories[$model->category_id]['title'] : '<i class="fa fa-times"></i>',
+                'format' => 'raw'
+            ],
             'text:ntext',
             'image' => [
                 'attribute' => 'image',

@@ -19,7 +19,7 @@ class AneksSearch extends Aneks
     public function rules()
     {
         return [
-            [['id', 'user_id', 'category_id'], 'integer'],
+            [['id', 'user_id', 'category_id', 'is_visible'], 'integer'],
             [['text', 'user', 'image', 'publish_time'], 'safe'],
         ];
     }
@@ -78,6 +78,8 @@ class AneksSearch extends Aneks
         ]);
 
         $this->load($params);
+
+
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails

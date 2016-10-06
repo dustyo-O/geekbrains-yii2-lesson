@@ -7,6 +7,7 @@ use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 
 /**
@@ -46,10 +47,8 @@ class AnekController extends Controller
         ]);
     }
 
-    public function actionFeed($cat = null)
+    public function actionFeed($cat = null, $page = 1)
     {
-
-
         $filter = new FilterForm();
 
         $post = Yii::$app->request->post();
@@ -64,7 +63,7 @@ class AnekController extends Controller
             $filter->category_id = $cat;
         }
         
-        $aneks = Aneks::getFeedQuery(1, $filter)->all();
+        $aneks = Aneks::getFeedQuery($page, $filter)->all();
 
         /* @var $aneks Aneks[] */
 
@@ -74,11 +73,24 @@ class AnekController extends Controller
             $users[$a->user->id] = $a->user->username;
         }
 
-        return $this->render('feed', [
-            'aneks' => $aneks,
-            'users' => $users,
-            'filter' => $filter
-        ]);
+        if (Yii::$app->request->isAjax)
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            $response = [];
+            foreach($aneks as $a) $response[] = $a->toArray();
+            return $response;
+
+        }
+        else
+        {
+            return $this->render('feed', [
+                'aneks' => $aneks,
+                'users' => $users,
+                'filter' => $filter
+            ]);
+        }
+
     }
 
     public function actionView($id)

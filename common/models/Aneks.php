@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $user_id
+ * @property integer $is_visible
  * @property integer $category_id
  * @property string $text
  * @property string $image
@@ -30,19 +31,19 @@ class Aneks extends \yii\db\ActiveRecord
 
 
     public static $categories = [
-        [
+        10 => [
             'id' => 10,
             'title' => 'Теща'
         ],
-        [
+        20 => [
             'id' => 20,
             'title' => 'Вовочка'
         ],
-        [
+        30 => [
             'id' => 30,
             'title' => 'Пошлые'
         ],
-        [
+        40 => [
             'id' => 40,
             'title' => 'Программистские'
         ]
@@ -68,7 +69,8 @@ class Aneks extends \yii\db\ActiveRecord
     {
         return [
             [['user_id'], 'default', 'value' => Yii::$app->user->id],
-            [['user_id', 'category_id'], 'integer'],
+            [['user_id', 'category_id', 'is_visible'], 'integer'],
+            [['is_visible'], 'default', 'value' => 0],
             [['text'], 'string'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -82,6 +84,7 @@ class Aneks extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'Пользователь',
+            'is_visible' => 'Видимость',
             'category_id' => 'Категория',
             'text' => 'Текст анекдота',
             'image' => 'Картинка',
@@ -205,6 +208,9 @@ class Aneks extends \yii\db\ActiveRecord
 
         }
 
+
+        $aneks_query->offset(($page-1) * Yii::$app->params['aneks_per_page'])->limit(Yii::$app->params['aneks_per_page']);
+
         return $aneks_query;
     }
 
@@ -221,12 +227,25 @@ class Aneks extends \yii\db\ActiveRecord
         }
     }
 
-    /*public function beforeSave($insert)
+    public function beforeSave($insert)
     {
         if ($insert)
         {
             $this->user_id = Yii::$app->user->id;
         }
+
+        return parent::beforeSave($insert);
+    }
+
+  /*  public function afterSave($insert, $changed)
+    {
+        if ($insert)
+        {
+            $this->id;
+        }
+
+
+        return parent::afterSave($insert, $changed);
     }*/
 
 

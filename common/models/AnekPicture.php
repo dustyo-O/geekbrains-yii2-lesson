@@ -33,6 +33,14 @@ class AnekPicture extends Model
     {
         $picture_filename = self::getImageDir() . $picture->name;
 
+        $i = 0;
+        $parts = pathinfo($picture_filename);
+        while(file_exists($picture_filename))
+        {
+            $i++;
+            $picture_filename = $parts['dirname'].'/'.$parts['filename'].'_'.$i.'.'.$parts['extension'];
+        }
+
         if ($picture->saveAs($picture_filename))
         {
             return $picture->name;

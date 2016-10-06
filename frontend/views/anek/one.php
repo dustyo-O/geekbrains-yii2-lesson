@@ -16,7 +16,6 @@ use yii\helpers\Url;
 
 $this->title = "Анекдот #".$anek->id;
 
-
 ?>
 
 

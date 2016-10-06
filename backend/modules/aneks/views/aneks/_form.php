@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use common\models\AnekPicture;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Aneks */
@@ -16,8 +17,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
 
-    <?php
-    var_dump($model->image);
+    <?=
+    AnekPicture::getImageHtml($model->image)
     ?>
 
     <?= $form->field($model, 'image')->fileInput() ?>

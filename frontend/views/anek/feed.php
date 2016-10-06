@@ -22,6 +22,7 @@ use frontend\assets\ZoomAsset;
 $this->registerJsFile("js/example.js",['depends' => [\yii\web\JqueryAsset::className()]]);
 
 $like_url = Url::to(['ajax/like']);
+$paginator_url = Url::to(['feed', 'page' => '']);
 
 $this->registerJs(<<<JS
     $(".like-btn").click(
@@ -45,6 +46,32 @@ $this->registerJs(<<<JS
     $("span.zoom").zoom({
         
     });
+    
+    var page = 1;
+
+    $(".load-more").click(
+    function(){
+        
+        page = page + 1;
+        var pattern = '{$paginator_url}';
+        
+        var url = pattern+String(page);
+        
+        $.ajax(
+        {
+            url: url,
+            type: 'POST',
+            data: $("#filter-form").serialize(),
+            dataType: 'json'
+        }
+        ).done(
+            function ()
+            {
+                
+            }
+        )            
+    }
+);
 JS
 );
 
@@ -134,5 +161,6 @@ HTML;
         <?php
         }
         ?>
+    <button class="load-more btn btn-default">Загрузить еще</button>
 
 </div>
