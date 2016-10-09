@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%aneks}}".
@@ -28,6 +29,9 @@ class Aneks extends \yii\db\ActiveRecord
     const MODE_BOTH = 10;
     const MODE_IMAGE = 20;
     const MODE_TEXT = 30;
+
+    const REPACK_ODD = 1;
+    const REPACK_EVEN = 2;
 
 
     public static $categories = [
@@ -247,6 +251,5 @@ class Aneks extends \yii\db\ActiveRecord
 
         return parent::afterSave($insert, $changed);
     }*/
-
 
 }

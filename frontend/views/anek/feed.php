@@ -83,6 +83,20 @@ span.zoom {
 span.zoom img {
     display: block;
 }
+
+.anek-row {
+ -moz-column-width: 18em;
+ -webkit-column-width: 18em;
+ -moz-column-gap: 1em;
+ -webkit-column-gap:1em;
+
+}
+
+.anek-item {
+ display: inline-block;
+ padding:  .25rem;
+ width:  100%;
+}
 CSS
 );
 
@@ -107,31 +121,35 @@ ActiveForm::end();
 ?>
 
 
-<div class="row">
-        <?php
-        foreach ($aneks as $a)
-        {
-        ?>
-    <div class="col-sm-6">
-            <?php
-            $anek_content = $a->getContent();
+<div class="anek-row">
+    <?php
 
-            $image_html = '';
-            $text_html = '';
-            if (($anek_content->mode === Aneks::MODE_BOTH)||($anek_content->mode === Aneks::MODE_IMAGE))
-            {
-                $image_src = $a->getImage();
-                $image_html = <<<HTML
-    <span class="zoom"><img src="{$image_src}" class="img-responsive"/></span>"
+
+    foreach ($aneks as $a)
+    {
+        /* @var $a Aneks */
+
+    ?>
+    <div class="anek-item">
+        <?php
+        $anek_content = $a->getContent();
+
+        $image_html = '';
+        $text_html = '';
+        if (($anek_content->mode === Aneks::MODE_BOTH)||($anek_content->mode === Aneks::MODE_IMAGE))
+        {
+            $image_src = $a->getImage();
+            $image_html = <<<HTML
+<span class="zoom"><img src="{$image_src}" class="img-responsive"/></span>
 HTML;
-            }
-            if (($anek_content->mode === Aneks::MODE_BOTH)||($anek_content->mode === Aneks::MODE_TEXT))
-            {
-                $text_html = <<<HTML
-    <p>{$anek_content->text}</p>
+        }
+        if (($anek_content->mode === Aneks::MODE_BOTH)||($anek_content->mode === Aneks::MODE_TEXT))
+        {
+            $text_html = <<<HTML
+<p>{$anek_content->text}</p>
 HTML;
-            }
-            ?>
+        }
+        ?>
 
         <section class="blog-post">
             <div class="panel panel-default">
@@ -157,10 +175,14 @@ HTML;
             </div>
         </section><!-- /.blog-post -->
 
+
     </div>
-        <?php
-        }
-        ?>
+
     <button class="load-more btn btn-default">Загрузить еще</button>
+
+    <?php
+    }
+    ?>
+
 
 </div>
