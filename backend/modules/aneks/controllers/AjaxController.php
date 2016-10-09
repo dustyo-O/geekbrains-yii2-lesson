@@ -2,6 +2,7 @@
 
 namespace app\modules\aneks\controllers;
 
+use backend\controllers\SiteController;
 use Yii;
 use common\models\Aneks;
 use common\models\search\AneksSearch;
@@ -15,21 +16,21 @@ use common\models\AnekPicture;
 /**
  * AneksController implements the CRUD actions for Aneks model.
  */
-class AjaxController extends Controller
+class AjaxController extends SiteController
 {
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
-        return [
+        return array_merge( parent::behaviors(), [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
-        ];
+        ]);
     }
 
     public function actionToggleVisibility()

@@ -46,7 +46,7 @@ CubeAsset::register($this)
                         <li class="dropdown profile-dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="img/samples/scarlet-159.png" alt=""/>
-                                <span class="hidden-xs">Scarlett Johansson</span> <b class="caret"></b>
+                                <span class="hidden-xs"><?= Yii::$app->user->identity->username ?></span> <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a href="user-profile.html"><i class="fa fa-user"></i>Profile</a></li>
@@ -56,7 +56,7 @@ CubeAsset::register($this)
                             </ul>
                         </li>
                         <li class="hidden-xxs">
-                            <a class="btn">
+                            <a class="btn" href="<?= Url::to(['site/logout']) ?>" data-method="post">
                                 <i class="fa fa-power-off"></i>
                             </a>
                         </li>

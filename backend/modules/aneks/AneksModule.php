@@ -7,7 +7,7 @@ namespace app\modules\aneks;
  */
 class AneksModule extends \yii\base\Module
 {
-    public $layout = '@app/views/layouts/cube.php';
+
 
     /**
      * @inheritdoc

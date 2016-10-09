@@ -2,6 +2,7 @@
 
 namespace app\modules\aneks\controllers;
 
+use backend\controllers\SiteController;
 use Yii;
 use common\models\Aneks;
 use common\models\search\AneksSearch;
@@ -14,21 +15,22 @@ use common\models\AnekPicture;
 /**
  * AneksController implements the CRUD actions for Aneks model.
  */
-class AneksController extends Controller
+class AneksController extends SiteController
 {
+    public $layout = '@app/views/layouts/cube.php';
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
-        return [
+        return array_merge( parent::behaviors(), [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
-        ];
+        ]);
     }
 
     /**
