@@ -6,6 +6,7 @@ use frontend\assets\BlogAsset;
 use yii\helpers\Html;
 use common\models\Aneks;
 use yii\helpers\Url;
+use yii\widgets\Menu;
 
 BlogAsset::register($this);
 
@@ -29,7 +30,7 @@ BlogAsset::register($this);
 <?php $this->beginBody() ?>
 <div class="navbar navbar-material-blog navbar-primary navbar-absolute-top">
 
-    <div class="navbar-image" style="background-image: url('img/technology/unsplash-6.jpg');background-position: center 40%;"></div>
+    <div class="navbar-image" style="background-image: url('/img/technology/unsplash-6.jpg');background-position: center 40%;"></div>
 
     <div class="navbar-wrapper container">
         <div class="navbar-header">
@@ -41,7 +42,7 @@ BlogAsset::register($this);
             <a class="navbar-brand" href="/"><i class="material-icons">&#xE871;</i> Анекдоты</a>
         </div>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
-            <ul class="nav navbar-nav">
+            <!--<ul class="nav navbar-nav">
                 <li class="active dropdown">
                     <a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown">Категории <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -62,7 +63,86 @@ BlogAsset::register($this);
                 <li class="active dropdown">
                     <a href="<?= Url::to(['news']) ?>">Новости</a>
                 </li>
-            </ul>
+            </ul>-->
+            <?php
+            $cat_menu = [];
+            foreach (Aneks::$categories as $cat)
+            {
+                $cat_menu[] = ['label' => $cat['title'], 'url' => ['anek/feed', 'cat' => $cat['id']]];
+            }
+            ?>
+            <?=
+            Menu::widget([
+                'items' => [
+                    [
+                        'label' => 'Категории',
+                        'items' =>
+                        $cat_menu,
+                        'options' => [
+                            'class' => 'active dropdown'
+                        ]
+                    ]
+                ],
+                'options' => [
+                    'class' => 'nav navbar-nav'
+                ],
+                'labelTemplate' => '<a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+{label}
+<b class="caret"></b>
+</a>',
+                'submenuTemplate' => "\n<ul class=\"dropdown-menu\">\n{items}\n</ul>\n"
+            ])
+            ?>
+            <?=
+            Menu::widget([
+                'items' => [
+                    [
+                        'label' => 'Привет, Гость!',
+                        'items' => [
+                            [
+                                'label' => 'Регистрация',
+                                'url' => ['user/signup']
+                            ],
+                            [
+                                'label' => 'Войти на сайт',
+                                'url' => ['user/login']
+                            ]
+                        ],
+                        'options' => [
+                            'class' => 'active dropdown'
+                        ],
+                        'visible' => Yii::$app->user->isGuest
+                    ],
+                    [
+                        'label' => 'Привет, '.(Yii::$app->user->isGuest ? '' : Yii::$app->user->identity->username),
+                        'items' => [
+                            [
+                                'label' => 'Отправить анекдот',
+                                'url' => ['user/post-anek']
+                            ],
+                            [
+                                'label' => 'Выйти',
+                                'url' => ['user/logout'],
+                                'template' => "<a href='{url}' data-method=\"post\">{label}</a>"
+                            ]
+                        ],
+                        'options' => [
+                            'class' => 'active dropdown'
+                        ],
+                        'visible' => !Yii::$app->user->isGuest
+                    ]
+                ],
+                'options' => [
+                    'class' => 'nav navbar-nav navbar-right'
+                ],
+                'labelTemplate' => '<a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+{label}
+<b class="caret"></b>
+</a>',
+                'submenuTemplate' => "\n<ul class=\"dropdown-menu\">\n{items}\n</ul>\n"
+            ])
+            ?>
+<!--
             <ul class="nav navbar-nav navbar-right">
                 <?php
                 if (Yii::$app->user->isGuest)
@@ -94,7 +174,7 @@ BlogAsset::register($this);
 
                 }
                 ?>
-            </ul>
+            </ul>-->
         </div>
     </div>
 </div>
