@@ -17,6 +17,7 @@ use yii\helpers\ArrayHelper;
  * @property string $publish_time
  *
  * @property User $user
+ * @property Likes[] $likes
  */
 class Aneks extends \yii\db\ActiveRecord
 {
@@ -103,6 +104,14 @@ class Aneks extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLikes()
+    {
+        return $this->hasMany(Likes::className(), ['anek_id' => 'id']);
+    }
+
     public static function getImageDir()
     {
         if (!is_dir(self::IMAGE_DIR))
@@ -160,13 +169,18 @@ class Aneks extends \yii\db\ActiveRecord
      */
     public static function getFeedQuery($page = 1, $filter = null)
     {
-        $aneks_query = static::find()->leftJoin(User::tableName(), static::tableName().'.user_id = '.User::tableName().'.id')->with('user');
+        $aneks_query = static::find()
+            ->where(['is_visible' => 1])
+            ->leftJoin(User::tableName(), static::tableName().'.user_id = '.User::tableName().'.id')
+            ->leftJoin(Likes::tableName(), static::tableName().'.id = '.Likes::tableName().'.anek_id')
+            ->groupBy(static::tableName().'.id')
+            ->with('user')
+            ->with('likes');
 
         //var_dump($filter);
 
         if ($filter)
         {
-
             $aneks_query->filterWhere([
                     'user_id' => $filter->user,
                     'category_id' => $filter->category_id
@@ -231,14 +245,37 @@ class Aneks extends \yii\db\ActiveRecord
         }
     }
 
-    public function beforeSave($insert)
+    /**
+     * Определяем, ставил ли текущий пользователь лайк
+     * @param null|int $user_id ID пользователя - если не указано, то текущий пользователь
+     * @return bool|null статус - лайкал или нет, или null, если текущий юзер гость при поиске для текущего
+     */
+    public function userLikes($user_id = null)
     {
-        if ($insert)
+        if ($user_id === null)
         {
-            $this->user_id = Yii::$app->user->id;
+            if (Yii::$app->user->isGuest) return null; // Гость не лайкает
+            $user_id = \Yii::$app->user->id;
         }
 
-        return parent::beforeSave($insert);
+        foreach ($this->likes as $like)
+        {
+            if ($user_id === $like->user_id) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Удаление лайков перед удалением анекдота
+     * @return bool
+     */
+    public function beforeDelete()
+    {
+
+        Likes::deleteAll(['anek_id' => $this->id]);
+
+        return parent::beforeDelete();
     }
 
   /*  public function afterSave($insert, $changed)

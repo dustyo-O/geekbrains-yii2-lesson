@@ -24,18 +24,24 @@ $this->registerJs(<<<JS
             function (msg) {
                 if (msg.status === 'success')
                 {
+                    $(this).empty();
                     if (parseInt(msg.is_visible) === 0)
                     {
                         
                         $(this).removeClass('btn-success');
                         $(this).addClass('btn-default');
-                          
+                        $(this).append(
+                            $("<i/>", {class: "fa fa-eye-slash"})
+                        )
                     }
                     else 
                     {
                         $(this).removeClass('btn-default');
                         $(this).addClass('btn-success');
-                        
+                        $(this).append(
+                            $("<i/>", {class: "fa fa-eye"})
+                        )
+
                     }
                     $(this).data('value', msg.is_visible);
                 }
@@ -78,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'is_visible' => [
                 'attribute' => 'is_visible',
                 'value' => function($model) {
-var_dump($model->is_visible);
+
                     if ($model->is_visible)
                     {
                         return <<<HTML

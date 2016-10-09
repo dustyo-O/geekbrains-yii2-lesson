@@ -67,26 +67,34 @@ class AnekController extends Controller
 
         /* @var $aneks Aneks[] */
 
-        $users = [];
-        foreach ($aneks as $a)
-        {
-            $users[$a->user->id] = $a->user->username;
-        }
-
         if (Yii::$app->request->isAjax)
         {
             Yii::$app->response->format = Response::FORMAT_JSON;
 
-            $response = [];
-            foreach($aneks as $a) $response[] = $a->toArray();
-            return $response;
+            $response = new \stdClass;
+            $response->aneks = [];
+            $response->users = [];
+            foreach($aneks as $a)
+            {
+                $response->aneks[] = array_merge($a->toArray(), // подмешиваем раздличные связанные данные
+                    [
+                        'category' => $a->getCategory(),
+                        'likes' => count($a->likes),
+                        'like' => $a->userLikes()
+                    ]
+                );
 
+                if (!isset($response->users[$a->user->id]))
+                {
+                    $response->users[$a->user->id] = $a->user->toArray(['id', 'username']);
+                }
+            }
+            return $response;
         }
         else
         {
             return $this->render('feed', [
                 'aneks' => $aneks,
-                'users' => $users,
                 'filter' => $filter
             ]);
         }
