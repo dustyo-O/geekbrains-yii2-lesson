@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use frontend\models\ContactForm;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -48,9 +49,14 @@ class ImageController extends Controller
      *
      * @return mixed
      */
-    public function actionGet($url)
+    public function actionGet($url = null)
     {
         $image = AnekPicture::readPicture($url);
+
+        if ($url === null)
+        {
+            throw new BadRequestHttpException("Картинка не запрошена");
+        }
 
         if ($image)
         {

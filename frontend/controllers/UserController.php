@@ -8,6 +8,7 @@
 namespace frontend\controllers;
 
 use common\models\AnekPicture;
+use frontend\models\ExcelForm;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -20,6 +21,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use common\models\AneksPublish;
 use yii\web\UploadedFile;
+use common\models\Aneks;
 
 
 /**
@@ -196,6 +198,42 @@ class UserController extends Controller
 
         return $this->render("create-anek",[
             'anek_form' => $anek_form
+        ]);
+    }
+
+    public function actionUploadAnek()
+    {
+        $upload_form = new ExcelForm();
+
+
+        if (Yii::$app->request->isPost)
+        {
+            $file = UploadedFile::getInstance($upload_form,'word');
+            $content = null;
+
+            if ($file)
+            {
+                $content = ExcelForm::getContent($file);
+
+
+                $anek = new Aneks();
+                $anek->text = $content;
+
+                if ($anek->save())
+                {
+                    return $this->redirect(["feed"]);
+                }
+                else
+                {
+                    //var_dump($anek->errors);die();
+                }
+
+            }
+            //die($content);
+        }
+
+        return $this->render("upload-anek",[
+            'upload_form' => $upload_form
         ]);
     }
 }

@@ -85,6 +85,7 @@ BlogAsset::register($this);
                 ],
                 'options' => [
                     'class' => 'nav navbar-nav'
+
                 ],
                 'labelTemplate' => '<a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
 {label}

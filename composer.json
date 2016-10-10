@@ -18,7 +18,9 @@
         "yiisoft/yii2": ">=2.0.6",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "bower-asset/jquery-zoom": "^1.7"
+        "bower-asset/jquery-zoom": "^1.7",
+        "phpoffice/phpword": "^0.13.0",
+        "phpoffice/phpexcel": "^1.8"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

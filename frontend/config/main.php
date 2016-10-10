@@ -30,8 +30,12 @@ return [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'categories' => [
+                        'yii\web\HttpException:*'
+                    ]
                 ],
-            ],
+            ]
+
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
