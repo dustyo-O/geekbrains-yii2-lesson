@@ -20,7 +20,7 @@ class m130524_201442_init extends Migration
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
             'email' => $this->string()->notNull()->unique(),
-
+            'role' => $this->integer()->notNull()->defaultValue(20),
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
@@ -30,6 +30,7 @@ class m130524_201442_init extends Migration
         $user->username = 'admin';
         $user->email = 'admin@localhost';
         $user->setPassword('admin');
+        $user->role = \common\models\User::ROLE_ADMIN;
         $user->generateAuthKey();
 
         $user->save();

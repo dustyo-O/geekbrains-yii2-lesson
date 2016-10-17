@@ -41,59 +41,43 @@ class AjaxController extends Controller
     {
         $id = Yii::$app->request->post("id");
 
-        if ($id !== null)
-        {
-            $id = (int) $id;
-            $anek = Aneks::findOne($id);
-            /* @var $anek Aneks */
-
-            if ($anek)
-            {
-                $likes = count($anek->likes);
-
-                if ($anek->userLikes())
-                {
-                    Likes::deleteAll(["user_id" => Yii::$app->user->id, "anek_id" => $anek->id]);
-                    $like = false;
-                    $likes--;
-                }
-                else
-                {
-                    $like = new Likes();
-
-                    $like->user_id = Yii::$app->user->id;
-                    $like->anek_id = $anek->id;
-
-                    if (!$like->save())
-                    {
-                        throw new ErrorException("Не удалось сохранить лайк");
-                    }
-                    else
-                    {
-                        $like = true;
-                        $likes++;
-                    }
-                }
-                $result = new \stdClass;
-
-                $result->like = $like;
-                $result->likes = $likes;
-
-                Yii::$app->response->format = Response::FORMAT_JSON;
-
-                return $result;
-
-            }
-            else
-            {
-                throw new ErrorException("Анекдот не найден");
-            }
-        }
-        else
-        {
+        if (!$id) {
             throw new BadRequestHttpException("Данные не переданы");
         }
+
+        $anek = Aneks::findOne($id);
+
+        if (!$anek) {
+            throw new ErrorException("Анекдот не найден");
+        }
+
+        $likes = count($anek->likes);
+
+        if ($anek->userLikes()) {
+            Likes::deleteAll(["user_id" => Yii::$app->user->id, "anek_id" => $anek->id]);
+            $like = false;
+            $likes--;
+        } else {
+            $like = new Likes();
+
+            $like->user_id = Yii::$app->user->id;
+            $like->anek_id = $anek->id;
+
+            if (!$like->save()) {
+                throw new ErrorException("Не удалось сохранить лайк");
+            }
+
+            $like = true;
+            $likes++;
+        }
+        $result = new \stdClass;
+
+        $result->like = $like;
+        $result->likes = $likes;
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        return $result;
     }
-
-
+    
 }

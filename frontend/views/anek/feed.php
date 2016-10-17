@@ -18,8 +18,7 @@ use frontend\assets\ZoomAsset;
 /* @var $users array */
 
 
-
-$this->registerJsFile("/js/jquery.grid-a-licious.min.js",['depends' => [\yii\web\JqueryAsset::className()]]);
+$this->registerJsFile("/js/jquery.grid-a-licious.min.js", ['depends' => [\yii\web\JqueryAsset::className()]]);
 
 $like_url = Url::to(['ajax/like']);
 $paginator_url = Url::to(['feed', 'page' => '']);
@@ -233,14 +232,13 @@ $form = ActiveForm::begin([
     'options' => ['class' => 'form-horizontal'],
 ]);
 
-foreach ($aneks as $a)
-{
+foreach ($aneks as $a) {
     if (!isset($users[$a->user->id])) {
         $users[$a->user->id] = $a->user->username;
     }
 }
 ?>
-<?= $form->field($filter, 'user')->dropDownList($users,['prompt' => 'Все пользователи']) ?>
+<?= $form->field($filter, 'user')->dropDownList($users, ['prompt' => 'Все пользователи']) ?>
 <?= $form->field($filter, 'mode')->checkboxList(Aneks::$modes) ?>
 <?= Html::submitButton('Искать', ['class' => 'btn btn-primary']) ?>
 <?php
@@ -250,77 +248,41 @@ ActiveForm::end();
 
 <div class="anek-row">
     <?php
-
-
-    foreach ($aneks as $a)
-    {
-        /* @var $a Aneks */
-
-    ?>
-    <div class="anek-item">
-        <?php
+    foreach ($aneks as $a) {
         $anek_content = $a->getContent();
-
-        $image_html = '';
-        $text_html = '';
-        if (($anek_content->mode === Aneks::MODE_BOTH)||($anek_content->mode === Aneks::MODE_IMAGE))
-        {
-            $image_src = $a->getImage();
-
+        if (($anek_content->mode === Aneks::MODE_BOTH) || ($anek_content->mode === Aneks::MODE_IMAGE)) {
             $image_url = Url::to(['image/get', 'url' => $a->image]);
-
-            $image_html = <<<HTML
-<span class="zoom"><img src="{$image_url}" class="img-responsive"/></span>
-HTML;
-        }
-        if (($anek_content->mode === Aneks::MODE_BOTH)||($anek_content->mode === Aneks::MODE_TEXT))
-        {
-            $text_html = <<<HTML
-<p>{$anek_content->text}</p>
-HTML;
         }
         ?>
-
-        <section class="blog-post">
-            <div class="panel panel-default">
-                <?= $image_html ?>
-                <div class="panel-body">
-                    <div class="blog-post-meta">
-                        <span class="label label-light label-primary"><?= $a->getCategory() ?></span>
-                        <p class="blog-post-date pull-right"><?= date("d.m.Y H:i", strtotime($a->publish_time)) ?></p>
-                    </div>
-                    <div class="blog-post-content">
-                        <a href="<?= Url::to(['user/profile', 'id' => $a->user->id]) ?>">
-                            <h2 class="blog-post-title pull-right"><?= $a->user->username ?></h2>
-                        </a>
-                        <?= $text_html ?>
-                        <a class="btn btn-info" href="<?= Url::to(['anek/related', 'id' => $a->id]) ?>">Похожие</a>
-                        <a class="blog-post-share pull-right" href="#">
-                            <i class="material-icons">&#xE80D;</i>
-
-                        </a>
-                        <?php
-                        $red = '';
-                        if ($a->userLikes())
-                        {
-                            $red = ' btn-danger';
-                        }
-                        ?>
-                        <button class="btn like-btn <?= $red ?>" data-id="<?= $a->id ?>"><?= count($a->likes) ?> <i class="fa fa-heart"></i></button>
+        <div class="anek-item">
+            <section class="blog-post">
+                <div class="panel panel-default">
+                    <?php if ($image_url) { ?>
+                        <span class="zoom"><img src="<?= $image_url ?>" class="img-responsive"/></span>
+                    <?php } ?>
+                    <div class="panel-body">
+                        <div class="blog-post-meta">
+                            <span class="label label-light label-primary"><?= $a->getCategory() ?></span>
+                            <p class="blog-post-date pull-right"><?= date("d.m.Y H:i", strtotime($a->publish_time)) ?></p>
+                        </div>
+                        <div class="blog-post-content">
+                            <a href="<?= Url::to(['user/profile', 'id' => $a->user->id]) ?>">
+                                <h2 class="blog-post-title pull-right"><?= $a->user->username ?></h2>
+                            </a>
+                            <?php if ($anek_content->text) { ?>
+                                <p><?= $anek_content->text ?></p>
+                            <?php } ?>
+                            <a class="btn btn-info" href="<?= Url::to(['anek/related', 'id' => $a->id]) ?>">Похожие</a>
+                            <a class="blog-post-share pull-right" href="#">
+                                <i class="material-icons">&#xE80D;</i>
+                            </a>
+                            <button class="btn like-btn <?php $a->userLikes() AND print ' btn-danger' ?>"
+                                    data-id="<?= $a->id ?>"><?= count($a->likes) ?> <i class="fa fa-heart"></i></button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section><!-- /.blog-post -->
-
-
-    </div>
-
-
-
-    <?php
-    }
-    ?>
-
-
+            </section><!-- /.blog-post -->
+        </div>
+    <?php } ?>
 </div>
 <button class="load-more btn btn-default">Загрузить еще</button>
