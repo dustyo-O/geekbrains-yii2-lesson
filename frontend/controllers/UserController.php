@@ -179,15 +179,13 @@ class UserController extends Controller
         if (count($post))
         {
             $picture = UploadedFile::getInstance($anek_form,'image');
-            $image = null;
 
             if ($picture)
             {
-                $image = AnekPicture::uploadImage($picture);
+                $anek_form->image = AnekPicture::uploadImage($picture);
             }
 
             $anek_form->text = $post['text'];
-            $anek_form->image = $image;
             $anek_form->category_id = $post['category_id'];
 
             if ($anek_form->createAnek())
@@ -205,16 +203,13 @@ class UserController extends Controller
     {
         $upload_form = new ExcelForm();
 
-
         if (Yii::$app->request->isPost)
         {
             $file = UploadedFile::getInstance($upload_form,'word');
-            $content = null;
 
             if ($file)
             {
                 $content = ExcelForm::getContent($file);
-
 
                 $anek = new Aneks();
                 $anek->text = $content;
@@ -223,13 +218,7 @@ class UserController extends Controller
                 {
                     return $this->redirect(["feed"]);
                 }
-                else
-                {
-                    //var_dump($anek->errors);die();
-                }
-
             }
-            //die($content);
         }
 
         return $this->render("upload-anek",[
