@@ -24,27 +24,16 @@ $this->title = "Анекдот #".$anek->id;
     <div class="col-sm-6">
             <?php
             $anek_content = $anek->getContent();
-
-            $image_html = '';
-            $text_html = '';
-            if (($anek_content->mode === Aneks::MODE_BOTH)||($anek_content->mode === Aneks::MODE_IMAGE))
-            {
-                $image_src = $anek->getImage();
-                $image_html = <<<HTML
-    <img src="{$image_src}" class="img-responsive"/>"
-HTML;
-            }
-            if (($anek_content->mode === Aneks::MODE_BOTH)||($anek_content->mode === Aneks::MODE_TEXT))
-            {
-                $text_html = <<<HTML
-    <p>{$anek_content->text}</p>
-HTML;
-            }
+            $image_src = ($anek_content->mode === Aneks::MODE_BOTH)||($anek_content->mode === Aneks::MODE_IMAGE) ?
+                $anek->getImage():
+                null;
             ?>
 
         <section class="blog-post">
             <div class="panel panel-default">
-                <?= $image_html ?>
+                <?php if ($image_src) { ?>
+                    <img src="<?= $image_src ?>" class="img-responsive"/>"
+                <?php } ?>
                 <div class="panel-body">
                     <div class="blog-post-meta">
                         <span class="label label-light label-primary"><?= $anek->getCategory() ?></span>
@@ -54,7 +43,9 @@ HTML;
                         <a href="post-image.html">
                             <h2 class="blog-post-title pull-right"><?= $anek->user->username ?></h2>
                         </a>
-                        <?= $text_html ?>
+                        <?php if ($anek_content->text) { ?>
+                            <?= "<p>{$anek_content->text}</p>" ?>
+                        <?php } ?>
                         <a class="btn btn-info" href="<?= Url::to(['anek/view', 'id' => $anek->id]) ?>">Читать</a>
                         <a class="blog-post-share pull-right" href="#">
                             <i class="material-icons">&#xE80D;</i>
@@ -63,8 +54,5 @@ HTML;
                 </div>
             </div>
         </section><!-- /.blog-post -->
-
     </div>
-
-
 </div>
