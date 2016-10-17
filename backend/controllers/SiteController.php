@@ -102,6 +102,10 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
+    /**
+     * create-anek
+     * @return string|\yii\web\Response
+     */
     public function actionCreateAnek()
     {
         $anek_form = new AneksPublish();
@@ -117,14 +121,13 @@ class SiteController extends Controller
                 $image = AneksPublish::uploadImage($picture);
             }
 
-
-
             $anek_form->text = $post['text'];
             $anek_form->image = $image;
             $anek_form->category_id = $post['category_id'];
 
             if ($anek_form->createAnek())
             {
+                Yii::$app->getSession()->setFlash('success','Анекдот добавлен');
                 return $this->refresh();
             }
         }

@@ -48,10 +48,23 @@ class AneksPublish extends Model
 
         $anek = new Aneks();
         $anek->text = $this->text;
+
+
         $anek->image = $this->image;
         $anek->category_id = $this->category_id;
         $anek->user_id = Yii::$app->getUser()->id;
-        return $anek->save() ? $anek : null;
+
+        $result = $anek->save();
+
+        if (preg_match("@^(http\:\/\/|https\:\/\/)?([a-z0-9][a-z0-9\-]*\.)+[a-z0-9][a-z0-9\-]*$@i",$this->text))
+        {          
+          exec("cd ". Yii::getAlias('@root'). " && php yii command/convert-url $anek->text $anek->id");
+          $anek->image = $anek->id.'.jpg';
+          $anek->save();
+        }
+
+
+        return $result ? $anek : null;
     }
 
     /**

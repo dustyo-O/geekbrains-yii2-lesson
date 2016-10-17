@@ -73,7 +73,7 @@ class Aneks extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id'], 'default', 'value' => Yii::$app->user->id],
+//            [['user_id'], 'default', 'value' => Yii::$app->user ? Yii::$app->user->id : 1],
             [['user_id', 'category_id', 'is_visible'], 'integer'],
             [['is_visible'], 'default', 'value' => 0],
             [['text'], 'string'],
@@ -276,6 +276,7 @@ class Aneks extends \yii\db\ActiveRecord
         Likes::deleteAll(['anek_id' => $this->id]);
 
         return parent::beforeDelete();
+
     }
 
   /*  public function afterSave($insert, $changed)

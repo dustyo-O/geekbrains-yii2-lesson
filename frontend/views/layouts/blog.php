@@ -10,6 +10,19 @@ use yii\widgets\Menu;
 
 BlogAsset::register($this);
 
+$success = Yii::$app->getSession()->getFlash('success');
+
+var_dump($success);
+
+if ($success)
+{
+    $this->registerJs(
+<<<JS
+    alert('{$success}');
+JS
+    );
+}
+
 
 ?>
 

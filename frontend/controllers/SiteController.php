@@ -70,7 +70,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $title = 'Привет, мир!';
+        $title = shell_exec("cd ". Yii::getAlias('@root'). " && php yii command/convert-url yandex.ru 60");
         return $this->render('index', [
             'caption' => $title
         ]);

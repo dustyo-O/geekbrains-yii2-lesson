@@ -192,6 +192,7 @@ class UserController extends Controller
 
             if ($anek_form->createAnek())
             {
+                Yii::$app->getSession()->setFlash('success','Анекдот добавлен');
                 return $this->goHome();
             }
         }
@@ -221,6 +222,7 @@ class UserController extends Controller
 
                 if ($anek->save())
                 {
+
                     return $this->redirect(["feed"]);
                 }
                 else
