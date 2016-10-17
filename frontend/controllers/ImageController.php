@@ -51,25 +51,21 @@ class ImageController extends Controller
      */
     public function actionGet($url = null)
     {
-        $image = AnekPicture::readPicture($url);
-
-        if ($url === null)
-        {
+        if ($url === null) {
             throw new BadRequestHttpException("Картинка не запрошена");
         }
 
-        if ($image)
-        {
-            $response = Yii::$app->getResponse();
-            $response->headers->set('Content-Type', 'image/jpeg');
-            $response->format = Response::FORMAT_RAW;
+        $image = AnekPicture::readPicture($url);
 
-            return $image;
-
-        }
-        else
-        {
+        if (!$image) {
             throw new NotFoundHttpException("Картинка не найдена");
         }
+
+        $response = Yii::$app->getResponse();
+        $response->headers->set('Content-Type', 'image/jpeg');
+        $response->format = Response::FORMAT_RAW;
+
+        return $image;
+
     }
 }
